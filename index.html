@@ -21,6 +21,38 @@
   .logo { height: 46px; width: auto; display: block; }
   .header .brand { color: #d30000; font-weight: 700; font-size: 20px; }
   .header .sub   { color: #888; font-size: 12.5px; margin-top: 2px; }
+  .tabs {
+    display: flex;
+    gap: 2px;
+    background: #fff;
+    padding: 0 28px;
+    border-bottom: 1px solid #e3e6ea;
+    flex-wrap: wrap;
+  }
+  .tab {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 13px 18px 11px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    font-family: inherit;
+    margin: 0;
+  }
+  .tab:hover { color: #d30000; background: #fdf2f2; }
+  .tab.active { color: #d30000; border-bottom-color: #d30000; }
+  .empty-panel {
+    max-width: 760px;
+    margin: 44px auto;
+    text-align: center;
+    padding: 70px 40px;
+  }
+  .empty-icon { font-size: 46px; }
+  .empty-panel .empty-title { color: #0d3846; font-size: 17px; font-weight: 700; margin: 18px 0 10px; }
+  .empty-panel .empty-sub { color: #777; font-size: 14px; line-height: 1.7; }
   .layout {
     display: flex;
     gap: 20px;
@@ -108,7 +140,12 @@
   </div>
 </div>
 
-<main class="layout">
+<nav class="tabs" id="companyTabs">
+  <button type="button" class="tab active" data-company="ctcp">CỔ PHẦN YẾN SÀO NHA TRANG</button>
+  <button type="button" class="tab" data-company="tnhh">TNHH THƯƠNG MẠI YẾN SÀO NHA TRANG</button>
+</nav>
+
+<main class="layout" id="toolCtcp">
 
   <!-- ===================== FORM ===================== -->
   <section class="panel form-panel">
@@ -151,6 +188,13 @@
   </section>
 
 </main>
+
+<!-- Noi dung tam thoi: TNHH chua co mau chu ky thong nhat -->
+<section class="panel empty-panel" id="emptyTnhh" style="display:none;">
+  <div class="empty-icon">📋</div>
+  <div class="empty-title">TNHH THƯƠNG MẠI YẾN SÀO NHA TRANG</div>
+  <div class="empty-sub">Mẫu chữ ký của đơn vị chưa được thống nhất.<br>Công cụ sẽ được cập nhật ngay khi có mẫu chuẩn — vui lòng quay lại sau.</div>
+</section>
 
 <!-- Mau chu ky goc (khong sua noi dung trong nay) -->
 <script type="text/plain" id="sigTemplate">
@@ -350,6 +394,21 @@
     } else {
       msg('Đã bôi đen toàn bộ chữ ký. Bấm Ctrl+C để copy, rồi sang Outlook/Gmail bấm chuột phải → Paste.', false);
     }
+  });
+
+  // ---- Tab chon cong ty / don vi (cung he sinh thai Nestizen) ----
+  var toolCtcp = document.getElementById('toolCtcp');
+  var emptyTnhh = document.getElementById('emptyTnhh');
+  var tabButtons = document.querySelectorAll('#companyTabs .tab');
+
+  tabButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      tabButtons.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var isCtcp = btn.getAttribute('data-company') === 'ctcp';
+      if (toolCtcp) toolCtcp.style.display = isCtcp ? '' : 'none';
+      if (emptyTnhh) emptyTnhh.style.display = isCtcp ? 'none' : '';
+    });
   });
 
 })();
