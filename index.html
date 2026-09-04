@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tạo chữ ký email - CTCP Yến Sào Nha Trang</title>
+<title>Tạo chữ ký email - Nestizen</title>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -15,9 +15,11 @@
   .header {
     background: #fff;
     border-bottom: 3px solid #d30000;
-    padding: 14px 28px;
+    padding: 12px 28px;
   }
-  .header .brand { color: #d30000; font-weight: 700; font-size: 18px; }
+  .brand-row { display: flex; align-items: center; gap: 16px; }
+  .logo { height: 46px; width: auto; display: block; }
+  .header .brand { color: #d30000; font-weight: 700; font-size: 20px; }
   .header .sub   { color: #888; font-size: 12.5px; margin-top: 2px; }
   .layout {
     display: flex;
@@ -97,8 +99,13 @@
 <body>
 
 <div class="header">
-  <div class="brand">CÔNG TY CỔ PHẦN YẾN SÀO NHA TRANG</div>
-  <div class="sub">Công cụ tạo chữ ký email từ mẫu chuẩn của công ty</div>
+  <div class="brand-row">
+    <img class="logo" src="logo-nestizen.jpg" alt="Nestizen">
+    <div>
+      <div class="brand">Nestizen</div>
+      <div class="sub">Công cụ tạo chữ ký email từ mẫu chuẩn</div>
+    </div>
+  </div>
 </div>
 
 <main class="layout">
