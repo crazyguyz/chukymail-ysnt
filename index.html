@@ -258,6 +258,35 @@
   var tpl = document.getElementById('sigTemplate').textContent;
   var $ = function (id) { return document.getElementById(id); };
 
+  // URL Google Apps Script Web App (ghi nhat ky vao Google Sheets)
+  var WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyfwKCQy1PVSm8GGQmhy30uaFiVB1ddkroKOoGAkO7qDt2KbU0_AbPg59s0f6hy__gMlw/exec';
+
+  // Ghi nhat ky vao Google Sheets (khong lam gian doan nguoi dung; loi chi log console)
+  function logToSheet(action) {
+    if (!WEB_APP_URL) return;
+    var d = current();
+    var activeTab = document.querySelector('#companyTabs .tab.active');
+    var payload = {
+      company:    activeTab ? activeTab.textContent.trim() : '',
+      action:     action,
+      employeeId: d.empid,
+      fullName:   d.name,
+      jobTitle:   d.job,
+      email:      d.mail,
+      phone:      d.phone,
+      source:     'github-pages'
+    };
+    try {
+      fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      }).then(function (r) { return r.text(); }).then(function (t) {
+        try { var j = JSON.parse(t); if (!j.ok) console.warn('chuku-log:', t); } catch (e) {}
+      }).catch(function (err) { console.warn('chuku-log error:', err); });
+    } catch (e) { /* im lang - khong gay loi cho nguoi dung */ }
+  }
+
   function msg(text, isErr) {
     var el = $('msg');
     el.textContent = text;
@@ -356,6 +385,7 @@
       a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
       msg('Đã tải file ' + d.empid + '.html về máy. Bạn có thể mở xem hoặc dùng làm file chữ ký Outlook.', false);
+      logToSheet('tai-file');
     } catch (e) {
       msg('Lỗi khi tải file: ' + e.message, true);
     }
@@ -391,6 +421,7 @@
 
     if (ok) {
       msg('Đã bôi đen toàn bộ chữ ký và copy xong. Sang Outlook/Gmail: soạn mail → bấm chuột phải vào vùng nội dung → Paste (Ctrl+V).', false);
+      logToSheet('copy');
     } else {
       msg('Đã bôi đen toàn bộ chữ ký. Bấm Ctrl+C để copy, rồi sang Outlook/Gmail bấm chuột phải → Paste.', false);
     }
