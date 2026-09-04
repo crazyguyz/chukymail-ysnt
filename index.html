@@ -311,6 +311,8 @@
   });
 
   // ---- Copy HTML (rich text) de dan vao Outlook / Gmail ----
+  // Copy TRUC TIEP tu vung XEM TRUOC (da render tren man hinh) - giong het
+  // thao tac boi den bang tay: anh da load, cau truc nguyen ven khi dan vao Outlook.
   $('btnCopy').addEventListener('click', function () {
     var d = current();
     var err = null;
@@ -318,15 +320,12 @@
     else if (!isValidMail(d.mail)) err = 'Email không hợp lệ (VD: ten.nv@ysnt.com.vn).';
     if (err) { msg(err, true); return; }
 
-    var html = buildHtml();
-    var holder = document.createElement('div');
-    holder.setAttribute('contenteditable', 'true');
-    holder.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;';
-    holder.innerHTML = html;
-    document.body.appendChild(holder);
+    // Dam bao vung xem truoc dang hien thi ban moi nhat
+    renderPreview();
+    var box = $('previewBox');
 
     var range = document.createRange();
-    range.selectNodeContents(holder);
+    range.selectNodeContents(box);
     var sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
@@ -335,7 +334,6 @@
     try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
 
     sel.removeAllRanges();
-    document.body.removeChild(holder);
 
     if (ok) {
       msg('Đã copy chữ ký (giữ nguyên định dạng). Vào Outlook/Gmail: soạn mail mới → bấm chuột phải vào vùng nội dung → Paste.', false);
