@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tạo chữ ký email - CTCP Yến Sào Nha Trang</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    background: #eef1f5;
+    margin: 0;
+    color: #222;
+  }
+  .header {
+    background: #fff;
+    border-bottom: 3px solid #d30000;
+    padding: 14px 28px;
+  }
+  .header .brand { color: #d30000; font-weight: 700; font-size: 18px; }
+  .header .sub   { color: #888; font-size: 12.5px; margin-top: 2px; }
+  .layout {
+    display: flex;
+    gap: 20px;
+    max-width: 1220px;
+    margin: 22px auto;
+    padding: 0 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .panel {
+    background: #fff;
+    border: 1px solid #e3e6ea;
+    border-radius: 10px;
+    padding: 20px 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .form-panel   { width: 400px; flex: 0 0 400px; }
+  .preview-panel{ flex: 1 1 520px; min-width: 0; }
+  .field { margin-bottom: 14px; }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  input {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #c9ced6;
+    border-radius: 6px;
+    outline: none;
+  }
+  input:focus { border-color: #d30000; box-shadow: 0 0 0 2px rgba(211,0,0,.12); }
+  .hint { font-size: 11.5px; color: #9aa0a6; margin-top: 4px; }
+  .actions { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+  button {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+  }
+  .btn-primary { background: #d30000; color: #fff; }
+  .btn-primary:hover { background: #b00000; }
+  .btn-ghost { background: #fff; color: #0d3846; border: 1px solid #0d3846; }
+  .btn-ghost:hover { background: #f0f4f6; }
+  .msg { font-size: 12.5px; margin-top: 12px; min-height: 18px; line-height: 1.45; }
+  .msg.err { color: #d30000; }
+  .msg.ok  { color: #0a8043; }
+  .preview-head { font-size: 12px; color: #666; margin-bottom: 8px; font-weight: 600; }
+  #previewBox {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    min-height: 280px;
+    padding: 24px 18px;
+    overflow: auto;
+  }
+  #previewBox > div { margin: 0 auto; }
+  .hint-empty {
+    color: #b0b6bd;
+    text-align: center;
+    padding: 90px 20px;
+    font-size: 13.5px;
+  }
+  @media (max-width: 920px) {
+    .form-panel { flex: 1 1 100%; width: auto; }
+    .preview-panel { flex: 1 1 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">CÔNG TY CỔ PHẦN YẾN SÀO NHA TRANG</div>
+  <div class="sub">Công cụ tạo chữ ký email từ mẫu chuẩn của công ty</div>
+</div>
+
+<main class="layout">
+
+  <!-- ===================== FORM ===================== -->
+  <section class="panel form-panel">
+    <div class="field">
+      <label for="fName">Họ và tên *</label>
+      <input id="fName" type="text" autocomplete="off" placeholder="VD: Nguyễn Văn An">
+    </div>
+    <div class="field">
+      <label for="fJob">Chức danh</label>
+      <input id="fJob" type="text" autocomplete="off" placeholder="VD: Trưởng phòng Kỹ thuật">
+    </div>
+    <div class="field">
+      <label for="fMail">Email *</label>
+      <input id="fMail" type="email" autocomplete="off" placeholder="VD: ten.nv@ysnt.com.vn">
+    </div>
+    <div class="field">
+      <label for="fPhone">Số ĐT di động</label>
+      <input id="fPhone" type="text" autocomplete="off" placeholder="VD: 912345678">
+      <div class="hint">Chỉ cần nhập số, hệ thống tự thêm (+84). Có thể nhập 0912..., +84..., 84...</div>
+    </div>
+    <div class="field">
+      <label for="fEmpId">Mã nhân viên *</label>
+      <input id="fEmpId" type="text" autocomplete="off" placeholder="VD: NV0123">
+      <div class="hint">Dùng làm tên file khi tải xuống: &lt;mã nhân viên&gt;.html</div>
+    </div>
+
+    <div class="actions">
+      <button id="btnDownload" class="btn-primary">Tải file .html</button>
+      <button id="btnCopy" class="btn-ghost">Copy HTML để dán vào Outlook / Gmail</button>
+    </div>
+    <div id="msg" class="msg"></div>
+  </section>
+
+  <!-- ===================== PREVIEW ===================== -->
+  <section class="panel preview-panel">
+    <div class="preview-head">XEM TRƯỚC CHỮ KÝ</div>
+    <div id="previewBox">
+      <div class="hint-empty">Nhập họ tên và email hợp lệ để xem trước chữ ký</div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Mau chu ky goc (khong sua noi dung trong nay) -->
+<script type="text/plain" id="sigTemplate">
+<div style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #d30000; line-height: 1.4; max-width: 750px;">
+ 
+  <div style="margin-bottom: 4px; font-size: 13px;">Trân trọng!</div>
+  <div style="font-size: 14px; font-weight: bold; margin-bottom: 8px;">
+    [username] <span style="font-weight: normal; color: #d30000;">| [job] </span>
+  </div>
+  <hr style="border: none; border-top: 4px solid #d30000; margin: 0 0 12px 0;" />
+  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-collapse: collapse;">
+    <tr>
+      <td style="vertical-align: top; padding-right: 20px; width: 170px;">
+        <img src="data:image/png;base64,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" alt="YENSAONHATRANG" style="display: block; width: 100%; max-width: 170px; height: auto;" />
+      </td>
+
+      <td style="vertical-align: top; color: #d30000;">
+        <div style="font-size: 17px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+          CÔNG TY CỔ PHẦN YẾN SÀO NHA TRANG
+        </div>
+
+        <div style="font-size: 12px; margin-bottom: 3px;">
+          <strong>Trụ sở:</strong> 159 Phong Châu, Phường Nam Nha Trang, Tỉnh Khánh Hòa.
+        </div>
+
+        <div style="font-size: 12px; margin-bottom: 3px;">
+          <strong>Chi nhánh TP. HCM:</strong> Lầu 7, 40 Phạm Ngọc Thạch, Phường Xuân Hòa, Tp. Hồ Chí Minh.
+        </div>
+
+        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; font-size: 12px; margin-bottom: 3px; color: #d30000;">
+          <tr>
+            <td style="padding-right: 15px;"><strong>Điện thoại:</strong> (+84) 28 7777 7886 – EXT: 709</td>
+            <td><strong>Di động:</strong> (+84) [phone]</td>
+          </tr>
+        </table>
+
+        <div style="font-size: 12px;">
+          <strong>Email:</strong> <a href="mailto:[mail]" style="color: #0066cc; text-decoration: underline;">[mail]</a>
+          <span style="margin: 0 4px; color: #d30000;">Website:</span>
+          <a href="http://www.ysnt.com.vn" style="color: #0066cc; text-decoration: underline;">www.ysnt.com.vn</a>
+          <span style="margin: 0 2px; color: #d30000;">|</span>
+          <a href="http://www.yensaonhatrang.vn" style="color: #0066cc; text-decoration: underline;">www.yensaonhatrang.vn</a>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; margin-top: 12px; height: 5px; border-collapse: collapse;">
+    <tr>
+      <td style="background-color: #d30000; width: 65%; height: 5px;"></td>
+      <td style="background-color: #0d3846; width: 35%; height: 5px;"></td>
+    </tr>
+  </table>
+
+</div>
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  var tpl = document.getElementById('sigTemplate').textContent;
+  var $ = function (id) { return document.getElementById(id); };
+
+  function msg(text, isErr) {
+    var el = $('msg');
+    el.textContent = text;
+    el.className = 'msg ' + (isErr ? 'err' : 'ok');
+  }
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function isValidMail(s) {
+    return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s);
+  }
+
+  function normPhone(s) {
+    var t = s.trim();
+    if (!t) return '';
+    var d = t.replace(/[\s.\-()+]/g, '');
+    if (/^84(\d{8,10})$/.test(d)) return d.slice(2);
+    if (/^0(\d{8,10})$/.test(d))  return d.slice(1);
+    return t;
+  }
+
+  function safeFile(name) {
+    return name.trim().length > 0 &&
+           !/[/\\:*?"<>|]/.test(name) &&
+           name.trim() !== '.' && name.trim() !== '..';
+  }
+
+  function current() {
+    return {
+      name:  $('fName').value.trim(),
+      job:   $('fJob').value.trim(),
+      mail:  $('fMail').value.trim(),
+      phone: $('fPhone').value.trim(),
+      empid: $('fEmpId').value.trim()
+    };
+  }
+
+  // Thay the placeholder -> HTML hoan chinh (luon bat dau tu mau goc)
+  function buildHtml() {
+    var d = current();
+    var h = tpl;
+
+    // Chuc danh bo trong: xoa luon cum "| [job]" va span trang tri
+    if (!d.job) {
+      h = h.split('<span style="font-weight: normal; color: #d30000;">| [job] </span>').join('');
+      h = h.split('[job]').join('');
+    }
+    // So dien thoai bo trong: xoa luon o "Di dong" tren chu ky
+    if (!d.phone) {
+      h = h.split('<td><strong>Di động:</strong> (+84) [phone]</td>').join('');
+      h = h.split('[phone]').join('');
+    }
+
+    var ph = normPhone(d.phone);
+    h = h.split('[username]').join(esc(d.name))
+         .split('[job]').join(esc(d.job))
+         .split('[mail]').join(esc(d.mail))
+         .split('[phone]').join(esc(ph));
+    return h;
+  }
+
+  function renderPreview() {
+    var d = current();
+    if (!d.name || !isValidMail(d.mail)) {
+      $('previewBox').innerHTML = '<div class="hint-empty">Nhập họ tên và email hợp lệ để xem trước chữ ký</div>';
+      return;
+    }
+    $('previewBox').innerHTML = buildHtml();
+  }
+
+  ['fName', 'fJob', 'fMail', 'fPhone', 'fEmpId'].forEach(function (id) {
+    $(id).addEventListener('input', renderPreview);
+  });
+
+  // ---- Tai file .html ----
+  $('btnDownload').addEventListener('click', function () {
+    var d = current();
+    var err = null;
+    if (!d.name)            err = 'Vui lòng nhập HỌ VÀ TÊN.';
+    else if (!isValidMail(d.mail)) err = 'Email không hợp lệ (VD: ten.nv@ysnt.com.vn).';
+    else if (!d.empid)      err = 'Vui lòng nhập MÃ NHÂN VIÊN (dùng làm tên file).';
+    else if (!safeFile(d.empid)) err = 'Mã nhân viên chứa ký tự không hợp lệ cho tên file ( \\ / : * ? " < > | ).';
+    if (err) { msg(err, true); return; }
+
+    try {
+      var html = buildHtml();
+      var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = d.empid + '.html';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+      msg('Đã tải file ' + d.empid + '.html về máy. Bạn có thể mở xem hoặc dùng làm file chữ ký Outlook.', false);
+    } catch (e) {
+      msg('Lỗi khi tải file: ' + e.message, true);
+    }
+  });
+
+  // ---- Copy HTML (rich text) de dan vao Outlook / Gmail ----
+  $('btnCopy').addEventListener('click', function () {
+    var d = current();
+    var err = null;
+    if (!d.name) err = 'Vui lòng nhập HỌ VÀ TÊN.';
+    else if (!isValidMail(d.mail)) err = 'Email không hợp lệ (VD: ten.nv@ysnt.com.vn).';
+    if (err) { msg(err, true); return; }
+
+    var html = buildHtml();
+    var holder = document.createElement('div');
+    holder.setAttribute('contenteditable', 'true');
+    holder.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;';
+    holder.innerHTML = html;
+    document.body.appendChild(holder);
+
+    var range = document.createRange();
+    range.selectNodeContents(holder);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+
+    sel.removeAllRanges();
+    document.body.removeChild(holder);
+
+    if (ok) {
+      msg('Đã copy chữ ký (giữ nguyên định dạng). Vào Outlook/Gmail: soạn mail mới → bấm chuột phải vào vùng nội dung → Paste.', false);
+    } else {
+      msg('Không copy tự động được (trình duyệt chặn). Cách khác: bôi đen toàn bộ vùng XEM TRƯỚC bên phải → Ctrl+C → Paste vào mail.', true);
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
