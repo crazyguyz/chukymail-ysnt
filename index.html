@@ -324,21 +324,24 @@
     renderPreview();
     var box = $('previewBox');
 
+    // Tu dong boi den TOAN BO vung xem truoc chu ky
     var range = document.createRange();
     range.selectNodeContents(box);
     var sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
 
+    // Co gang copy tu dong; neu duoc thi nguoi dung chi viec sang Outlook dan
     var ok = false;
     try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
 
-    sel.removeAllRanges();
+    // Cuon vung preview vao tam nhin de thay ro phan dang boi den (giu nguyen boi den)
+    try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
 
     if (ok) {
-      msg('Đã copy chữ ký (giữ nguyên định dạng). Vào Outlook/Gmail: soạn mail mới → bấm chuột phải vào vùng nội dung → Paste.', false);
+      msg('Đã bôi đen toàn bộ chữ ký và copy xong. Sang Outlook/Gmail: soạn mail → bấm chuột phải vào vùng nội dung → Paste (Ctrl+V).', false);
     } else {
-      msg('Không copy tự động được (trình duyệt chặn). Cách khác: bôi đen toàn bộ vùng XEM TRƯỚC bên phải → Ctrl+C → Paste vào mail.', true);
+      msg('Đã bôi đen toàn bộ chữ ký. Bấm Ctrl+C để copy, rồi sang Outlook/Gmail bấm chuột phải → Paste.', false);
     }
   });
 
